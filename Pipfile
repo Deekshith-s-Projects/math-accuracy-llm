@@ -7,6 +7,12 @@ name = "pypi"
 pandas = "*"
 ipykernel = "*"
 openpyxl = "*"
+langchain = "*"
+langchain_community = "*"
+langchain-openai = "*"
+chainlit = "*"
+python-dotenv = "*"
+numexpr = "*"
 
 [dev-packages]
 
