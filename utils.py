@@ -3,6 +3,7 @@ from langchain.prompts import PromptTemplate
 from langchain.agents.agent_types import AgentType
 from langchain.agents import Tool, initialize_agent
 from math_prompt import MATH_PROMPT
+from time import time
 
 def get_agent(llm):
     word_problem_template = """You are a reasoning agent tasked with solving the user's logic-based questions.
@@ -67,12 +68,16 @@ def evaluate_equivalence(agent, question, answer):
         input_variables=["question", "answer"]
     )
     prompt = template.format(question=question, answer=answer)
-    try:
-        result = agent(prompt)
-    except Exception as e:
-        result = "Error: " + str(e)
     
-    return result
+    try:
+        start = time()
+        result = agent(prompt)
+        time_lapsed = time() - start
+    except Exception as e:
+        result = {'error': "Error: " + str(e), 'output': 'Has error'}
+        time_lapsed = None
+    
+    return {'llm_eval_results': result, 'Time taken to complete the request': time_lapsed}
 
 
 def prepare_data(df):

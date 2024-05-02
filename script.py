@@ -9,7 +9,7 @@ from pprint import pp
 
 load_dotenv()
 
-llm = OpenAI(model='gpt-3.5-turbo-instruct', temperature=0.1)
+llm = OpenAI(model='gpt-3.5-turbo-instruct', temperature=0)
 # TODO: - ONLY IF NEEDED - Increasing temp can help get around the limitations 
 # of numexpr like unsupported functions like round, but it leads to more errors.
 # Can venture into it if really needed since all we need is equivalence in this 
@@ -22,15 +22,15 @@ df['conv_history_list'] = df['Conversation History'].apply(ast.literal_eval)
 df['last_dialog'] = df['conv_history_list'].apply(lambda x: x[-1])
 df['last_question'] = df['last_dialog'].apply(lambda x: x['bot'])
 
-# TODO: Use the agent to evaluate the equivalence using the last dialog
+# Use the agent to evaluate the equivalence using the last dialog
 # When the last dialog is not sufficient, mark as "NOT_APPLICABLE" for now
 
 # evaluation = evaluate_equivalence(agent, df['last_question'][20], 
 #                                   df['User Response'][20])
-# df = df.iloc[:10, :]  # for testing purpose
-df['llm_eval_results'] = df.apply(
+df = df.iloc[-10:, :]  # for testing purposes
+df[['llm_eval_results', 'Time taken to complete the request']] = df.apply(
     lambda x: evaluate_equivalence(agent, x['last_question'], 
-                                   x['User Response']), axis=1)
+                                   x['User Response']), axis=1, result_type ='expand')
 eval_map = {'Correct': 'EQUIVALENT', 'Incorrect': 'NOT_EQUIVALENT', 
             'Insufficient context': 'NOT_APPLICABLE'}
 df['LLM Equivalence Evaluation (Response)'] = \
