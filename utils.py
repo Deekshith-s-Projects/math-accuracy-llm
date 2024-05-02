@@ -8,6 +8,12 @@ def get_agent(llm):
     Logically arrive at the solution, and be factual. In your answers, clearly detail the steps involved and give
     the final answer. Provide the response in bullet points. Question  {question} Answer"""
 
+    # word_problem_template = """You are a reasoning agent tasked with evaluating 
+    # the user's answers against the user's logic-based questions. 
+    # Logically arrive at the solution, and be factual. 
+    # Evaluate if the user's answer is correct, incorrect, or if you do not have sufficient context.
+    # Question  {question} Answer  {answer}  Evaluation  """
+
     math_assistant_prompt = PromptTemplate(
         input_variables=["question"],
         template=word_problem_template
@@ -48,6 +54,18 @@ def get_agent(llm):
     )
 
     return agent
+
+
+def evaluate_equivalence(agent, question, answer):
+    template = PromptTemplate(
+        template="""I'm trying to evaluate my answer to a math question. 
+        The question is: {question}. My answer is: {answer}. 
+        Is my answer correct, incorrect or do you not have sufficient context?
+        Provide the response as either 'Correct', 'Incorrect' or 'Insufficient context'""",
+        input_variables=["question", "answer"]
+    )
+    prompt = template.format(question=question, answer=answer)
+    return agent(prompt)
 
 
 def prepare_data(df):

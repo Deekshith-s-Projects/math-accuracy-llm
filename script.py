@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain_openai import OpenAI
 from langchain_core.prompts import PromptTemplate
 
-from utils import get_agent, prepare_data
+from utils import get_agent, evaluate_equivalence, prepare_data
 from pprint import pp
 
 load_dotenv()
@@ -25,15 +25,8 @@ df['last_question'] = df['last_dialog'].apply(lambda x: x['bot'])
 # TODO: Use the agent to evaluate the equivalence using the last dialog
 # When the last dialog is not sufficient, mark as "NOT_APPLICABLE" for now
 
-template = PromptTemplate(
-    template="""The question is: {question}. My answer is: {answer}. 
-    Is my answer correct, incorrect or do you not have sufficient context?""",
-    input_variables=["question", "answer"]
-)
-prompt = template.format(question=df['last_question'][100], 
-                         answer=df['User Response'][100])
-
-evaluation = agent(prompt)
+evaluation = evaluate_equivalence(agent, df['last_question'][20], 
+                                  df['User Response'][20])
 
 # TODO: - LOW PRIORITY - Try using the whole history
 # Try using just the last dialog first, and history only when it is not 
