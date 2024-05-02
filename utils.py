@@ -1,19 +1,9 @@
-from langchain_openai import OpenAI
 from langchain.chains import LLMMathChain, LLMChain
 from langchain.prompts import PromptTemplate
 from langchain.agents.agent_types import AgentType
 from langchain.agents import Tool, initialize_agent
-from dotenv import load_dotenv
 
-load_dotenv()
-
-def get_agent():
-    llm = OpenAI(model='gpt-3.5-turbo-instruct',
-                 temperature=0)  
-    # TODO: Increasing temp can help get around the limitations of numexpr like unsupported 
-    # functions like round, but it leads to more errors. Can venture into it if really 
-    # needed since all we need is equivalence in this problem!
-
+def get_agent(llm):
     word_problem_template = """You are a reasoning agent tasked with solving the user's logic-based questions.
     Logically arrive at the solution, and be factual. In your answers, clearly detail the steps involved and give
     the final answer. Provide the response in bullet points. Question  {question} Answer"""
