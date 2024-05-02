@@ -13,7 +13,7 @@ def get_agent(llm):
         template=word_problem_template
     )
 
-    word_problem_chain = LLMChain(llm=llm,
+    word_problem_chain = LLMChain(llm=llm, 
                                   prompt=math_assistant_prompt)
     word_problem_tool = Tool.from_function(name="Reasoning Tool",
                                            func=word_problem_chain.run,
