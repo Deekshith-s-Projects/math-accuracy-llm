@@ -9,7 +9,7 @@ from pprint import pp
 
 load_dotenv()
 
-llm = OpenAI(model='gpt-3.5-turbo-instruct', temperature=0.05)
+llm = OpenAI(model='gpt-3.5-turbo-instruct', temperature=0.1)
 # TODO: - ONLY IF NEEDED - Increasing temp can help get around the limitations 
 # of numexpr like unsupported functions like round, but it leads to more errors.
 # Can venture into it if really needed since all we need is equivalence in this 
@@ -25,8 +25,16 @@ df['last_question'] = df['last_dialog'].apply(lambda x: x['bot'])
 # TODO: Use the agent to evaluate the equivalence using the last dialog
 # When the last dialog is not sufficient, mark as "NOT_APPLICABLE" for now
 
-evaluation = evaluate_equivalence(agent, df['last_question'][20], 
-                                  df['User Response'][20])
+# evaluation = evaluate_equivalence(agent, df['last_question'][20], 
+#                                   df['User Response'][20])
+# df = df.iloc[:10, :]  # for testing purpose
+df['llm_eval_results'] = df.apply(
+    lambda x: evaluate_equivalence(agent, x['last_question'], 
+                                   x['User Response']), axis=1)
+eval_map = {'Correct': 'EQUIVALENT', 'Incorrect': 'NOT_EQUIVALENT', 
+            'Insufficient context': 'NOT_APPLICABLE'}
+df['LLM Equivalence Evaluation (Response)'] = \
+    df['llm_eval_results'].apply(lambda x: x['output']).map(eval_map)
 
 # TODO: - LOW PRIORITY - Try using the whole history
 # Try using just the last dialog first, and history only when it is not 

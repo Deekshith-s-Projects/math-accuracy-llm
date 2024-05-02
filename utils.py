@@ -2,6 +2,7 @@ from langchain.chains import LLMMathChain, LLMChain
 from langchain.prompts import PromptTemplate
 from langchain.agents.agent_types import AgentType
 from langchain.agents import Tool, initialize_agent
+from math_prompt import MATH_PROMPT
 
 def get_agent(llm):
     word_problem_template = """You are a reasoning agent tasked with solving the user's logic-based questions.
@@ -28,6 +29,7 @@ def get_agent(llm):
                                         )
 
     problem_chain = LLMMathChain.from_llm(llm=llm)
+    # problem_chain = LLMMathChain.from_llm(llm=llm, prompt=MATH_PROMPT)
     math_tool = Tool.from_function(name="Calculator",
                                    func=problem_chain.run,
                                    description="Useful for when you need to answer numeric questions. This tool is "
@@ -65,7 +67,12 @@ def evaluate_equivalence(agent, question, answer):
         input_variables=["question", "answer"]
     )
     prompt = template.format(question=question, answer=answer)
-    return agent(prompt)
+    try:
+        result = agent(prompt)
+    except Exception as e:
+        result = "Error: " + str(e)
+    
+    return result
 
 
 def prepare_data(df):
