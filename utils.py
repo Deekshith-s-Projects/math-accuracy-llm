@@ -9,7 +9,10 @@ load_dotenv()
 
 def get_agent():
     llm = OpenAI(model='gpt-3.5-turbo-instruct',
-                 temperature=0)
+                 temperature=0)  
+    # TODO: Increasing temp can help get around the limitations of numexpr like unsupported 
+    # functions like round, but it leads to more errors. Can venture into it if really 
+    # needed since all we need is equivalence in this problem!
 
     word_problem_template = """You are a reasoning agent tasked with solving the user's logic-based questions.
     Logically arrive at the solution, and be factual. In your answers, clearly detail the steps involved and give
@@ -49,7 +52,8 @@ def get_agent():
         tools=[math_tool, word_problem_tool],  # wikipedia_tool skipped for now
         llm=llm,
         agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-        verbose=False,
+        verbose=True,
+        return_intermediate_steps=True,
         handle_parsing_errors=True
     )
 
