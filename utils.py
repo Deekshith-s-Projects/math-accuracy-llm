@@ -58,3 +58,9 @@ def get_agent():
     )
 
     return agent
+
+
+def prepare_data(df):
+    df['Conversation History'] = df['Conversation History'].str.replace("`", "")
+
+    return df

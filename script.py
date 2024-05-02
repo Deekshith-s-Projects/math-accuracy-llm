@@ -1,7 +1,10 @@
 import pandas as pd
-from utils import get_agent
+import ast
+from utils import get_agent, prepare_data
 
 
-# df = pd.read_csv("Accuracy Calculation Dataset.csv")
-df = pd.read_excel("Accuracy Calculation Dataset.xlsx")  # CSV version has errors due to encoding issues
 agent = get_agent()
+
+df = prepare_data(pd.read_csv("Accuracy Calculation Dataset.csv"))
+
+conv_histories = df['Conversation History'].apply(ast.literal_eval)
