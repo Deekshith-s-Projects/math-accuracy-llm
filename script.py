@@ -16,12 +16,12 @@ agent = get_agent(llm)
 
 df = prepare_data(pd.read_csv("Accuracy Calculation Dataset.csv"))
 
-conv_histories = df['Conversation History'].apply(ast.literal_eval)
-last_dialogs = conv_histories.apply(lambda x: x[-1])
+df['conv_history_list'] = df['Conversation History'].apply(ast.literal_eval)
+df['last_dialog'] = df['conv_history_list'].apply(lambda x: x[-1])
+df['last_question'] = df['last_dialog'].apply(lambda x: x['bot'])
 
 # TODO: Use the agent to evaluate the equivalence using the last dialog
 # When the last dialog is not sufficient, mark as "NOT_APPLICABLE" for now
-
 
 
 # TODO: - LOW PRIORITY - Try using the whole history
