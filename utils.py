@@ -4,6 +4,8 @@ from langchain.agents.agent_types import AgentType
 from langchain.agents import Tool, initialize_agent
 from math_prompt import MATH_PROMPT
 from time import time
+import ast
+
 
 def get_agent(llm):
     word_problem_template = """You are a reasoning agent tasked with solving the user's logic-based questions.
@@ -62,9 +64,9 @@ def get_agent(llm):
 def evaluate_equivalence(agent, question, answer):
     template = PromptTemplate(
         template="""I'm trying to evaluate my answer to a math question. 
-        The question is: {question}. My answer is: {answer}. 
+        The question is: "{question}". My answer is: "{answer}". 
         Is my answer correct, incorrect or do you not have sufficient context?
-        Provide the response as either 'Correct', 'Incorrect' or 'Insufficient context'""",
+        Provide the response only as either 'Correct', 'Incorrect' or 'Insufficient context'""",
         input_variables=["question", "answer"]
     )
     prompt = template.format(question=question, answer=answer)
@@ -81,6 +83,12 @@ def evaluate_equivalence(agent, question, answer):
 
 
 def prepare_data(df):
+    # Cleaning
     df['Conversation History'] = df['Conversation History'].str.replace("`", "")
+
+    # Extracting the last dialog / question
+    df['conv_history_list'] = df['Conversation History'].apply(ast.literal_eval)
+    df['last_dialog'] = df['conv_history_list'].apply(lambda x: x[-1])
+    df['last_question'] = df['last_dialog'].apply(lambda x: x['bot'])
 
     return df

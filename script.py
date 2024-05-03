@@ -1,5 +1,4 @@
 import pandas as pd
-import ast
 from dotenv import load_dotenv
 from langchain_openai import OpenAI
 from langchain_core.prompts import PromptTemplate
@@ -18,9 +17,6 @@ agent = get_agent(llm)
 
 df = prepare_data(pd.read_csv("Accuracy Calculation Dataset.csv"))
 
-df['conv_history_list'] = df['Conversation History'].apply(ast.literal_eval)
-df['last_dialog'] = df['conv_history_list'].apply(lambda x: x[-1])
-df['last_question'] = df['last_dialog'].apply(lambda x: x['bot'])
 
 # Use the agent to evaluate the equivalence using the last dialog
 # When the last dialog is not sufficient, mark as "NOT_APPLICABLE" for now
