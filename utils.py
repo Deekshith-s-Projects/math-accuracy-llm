@@ -73,9 +73,10 @@ def get_agent(llm):
 def evaluate_equivalence(agent, question, answer):
     template = PromptTemplate(
         template="""I'm trying to evaluate my answer to a math question. 
-        The question is: "{question}". My answer is: "{answer}". 
+        The question is: \"{question}\". My answer is: \"{answer}\". 
+        Ignore rounding errors beyond 1 decimal point.
         Is my answer correct, incorrect or do you not have sufficient context?
-        Provide the response only as either 'Correct', 'Incorrect' or 'Insufficient context'""",
+        Provide your response only as either \"Correct\", \"Incorrect\" or \"Insufficient context\"""",
         input_variables=["question", "answer"]
     )
     prompt = template.format(question=question, answer=answer)
