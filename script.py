@@ -27,14 +27,15 @@ df['last_question'] = df['last_dialog'].apply(lambda x: x['bot'])
 
 # evaluation = evaluate_equivalence(agent, df['last_question'][20], 
 #                                   df['User Response'][20])
-df = df.iloc[-10:, :]  # for testing purposes
+df = df.sample(30)  # for testing purposes
 df[['llm_eval_results', 'Time taken to complete the request']] = df.apply(
     lambda x: evaluate_equivalence(agent, x['last_question'], 
                                    x['User Response']), axis=1, result_type ='expand')
 eval_map = {'Correct': 'EQUIVALENT', 'Incorrect': 'NOT_EQUIVALENT', 
-            'Insufficient context': 'NOT_APPLICABLE'}
+            'Insufficient context': 'NOT_APPLICABLE', 'Has error': 'HAS_ERROR'}
 df['LLM Equivalence Evaluation (Response)'] = \
     df['llm_eval_results'].apply(lambda x: x['output']).map(eval_map)
+df['error'] = df['llm_eval_results'].apply(lambda x: x.get('error'))
 
 # TODO: - LOW PRIORITY - Try using the whole history
 # Try using just the last dialog first, and history only when it is not 
