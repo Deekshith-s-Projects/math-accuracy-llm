@@ -13,6 +13,8 @@ langchain-openai = "*"
 chainlit = "*"
 python-dotenv = "*"
 numexpr = "*"
+langchain-experimental = "*"
+sympy = "*"
 
 [dev-packages]
 

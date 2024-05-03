@@ -21,8 +21,6 @@ df = prepare_data(pd.read_csv("Accuracy Calculation Dataset.csv"))
 # Use the agent to evaluate the equivalence using the last dialog
 # When the last dialog is not sufficient, mark as "NOT_APPLICABLE" for now
 
-# evaluation = evaluate_equivalence(agent, df['last_question'][20], 
-#                                   df['User Response'][20])
 df = df.sample(30)  # for testing purposes
 df[['llm_eval_results', 'Time taken to complete the request']] = df.apply(
     lambda x: evaluate_equivalence(agent, x['last_question'], 

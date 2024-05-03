@@ -1,4 +1,5 @@
 from langchain.chains import LLMMathChain, LLMChain
+from langchain_experimental.llm_symbolic_math.base import LLMSymbolicMathChain
 from langchain.prompts import PromptTemplate
 from langchain.agents.agent_types import AgentType
 from langchain.agents import Tool, initialize_agent
@@ -40,6 +41,14 @@ def get_agent(llm):
                                                "expressions, without text",
                                    )
 
+    symbolic_math_chain = LLMSymbolicMathChain.from_llm(llm=llm)
+    symbolic_math_tool = Tool.from_function(name="Symbolic Math",
+                                            func=symbolic_math_chain.run,
+                                            description="Useful for when you need to answer symbolic math questions. "
+                                                        "This tool is only for symbolic math questions and nothing else. Only "
+                                                        "input math expressions that have text",
+                                            )
+
     # wikipedia = WikipediaAPIWrapper()
     # # Wikipedia Tool
     # wikipedia_tool = Tool(
@@ -50,7 +59,7 @@ def get_agent(llm):
     # )
 
     agent = initialize_agent(
-        tools=[math_tool, word_problem_tool],  # wikipedia_tool skipped for now
+        tools=[math_tool, word_problem_tool, symbolic_math_tool],  # wikipedia_tool skipped for now
         llm=llm,
         agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
         verbose=True,
