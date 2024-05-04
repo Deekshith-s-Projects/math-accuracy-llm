@@ -3,6 +3,7 @@ from langchain_experimental.llm_symbolic_math.base import LLMSymbolicMathChain
 from langchain.prompts import PromptTemplate
 from langchain.agents.agent_types import AgentType
 from langchain.agents import Tool, initialize_agent
+from langchain_community.callbacks.manager import get_openai_callback
 from math_prompt import MATH_PROMPT
 from time import time
 import ast
@@ -12,12 +13,6 @@ def get_agent(llm):
     word_problem_template = """You are a reasoning agent tasked with solving the user's logic-based questions.
     Logically arrive at the solution, and be factual. In your answers, clearly detail the steps involved and give
     the final answer. Provide the response in bullet points. Question  {question} Answer"""
-
-    # word_problem_template = """You are a reasoning agent tasked with evaluating 
-    # the user's answers against the user's logic-based questions. 
-    # Logically arrive at the solution, and be factual. 
-    # Evaluate if the user's answer is correct, incorrect, or if you do not have sufficient context.
-    # Question  {question} Answer  {answer}  Evaluation  """
 
     math_assistant_prompt = PromptTemplate(
         input_variables=["question"],
@@ -49,17 +44,8 @@ def get_agent(llm):
                                                         "input math expressions that have text",
                                             )
 
-    # wikipedia = WikipediaAPIWrapper()
-    # # Wikipedia Tool
-    # wikipedia_tool = Tool(
-    #     name="Wikipedia",
-    #     func=wikipedia.run,
-    #     description="A useful tool for searching the Internet to find information on world events, issues, dates, "
-    #                 "years, etc. Worth using for general topics. Use precise questions.",
-    # )
-
     agent = initialize_agent(
-        tools=[math_tool, word_problem_tool, symbolic_math_tool],  # wikipedia_tool skipped for now
+        tools=[math_tool, word_problem_tool, symbolic_math_tool], 
         llm=llm,
         agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
         verbose=True,
@@ -82,14 +68,24 @@ def evaluate_equivalence(agent, question, answer):
     prompt = template.format(question=question, answer=answer)
     
     try:
-        start = time()
-        result = agent(prompt)
-        time_lapsed = time() - start
+        with get_openai_callback() as cb:
+            start = time()
+            result = agent(prompt)
+            time_lapsed = time() - start
+            # Below code is not really relevant to be included in computing the 
+            # response time because in real-time scenario, all the student will 
+            # need is the response, not the token counts
+            prompt_tokens = cb.prompt_tokens
+            completion_tokens = cb.completion_tokens
     except Exception as e:
         result = {'error': "Error: " + str(e), 'output': 'Has error'}
         time_lapsed = None
+        prompt_tokens = None
+        completion_tokens = None
     
-    return {'llm_eval_results': result, 'Time taken to complete the request': time_lapsed}
+    return {'llm_eval_results': result, 'Time taken to complete the request': 
+            time_lapsed, 'prompt_tokens': prompt_tokens, 'completion_tokens':
+            completion_tokens}
 
 
 def prepare_data(df):
