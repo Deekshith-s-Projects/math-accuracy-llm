@@ -13,24 +13,21 @@ def get_agent(llm):
     word_problem_template = """You are a reasoning agent tasked with solving the user's logic-based questions.
     Logically arrive at the solution, and be factual. In your answers, clearly detail the steps involved and give
     the final answer. Provide the response in bullet points. Question  {question} Answer"""
-
-    math_assistant_prompt = PromptTemplate(
+    word_problem_prompt = PromptTemplate(
         input_variables=["question"],
         template=word_problem_template
     )
-
     word_problem_chain = LLMChain(llm=llm, 
-                                  prompt=math_assistant_prompt)
+                                  prompt=word_problem_prompt)
     word_problem_tool = Tool.from_function(name="Reasoning Tool",
                                            func=word_problem_chain.run,
                                            description="Useful for when you need to answer logic-based/reasoning  "
                                                        "questions.",
                                         )
 
-    problem_chain = LLMMathChain.from_llm(llm=llm)
-    # problem_chain = LLMMathChain.from_llm(llm=llm, prompt=MATH_PROMPT)
+    math_chain = LLMMathChain.from_llm(llm=llm)
     math_tool = Tool.from_function(name="Calculator",
-                                   func=problem_chain.run,
+                                   func=math_chain.run,
                                    description="Useful for when you need to answer numeric questions. This tool is "
                                                "only for math questions and nothing else. Only input math "
                                                "expressions, without text",
