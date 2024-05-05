@@ -31,24 +31,6 @@ df['llm_matches_human'] = \
 # 'Human Evaluation' column without messing with it. 
 # TODO: This correction needs manual effort though.
 
-# Accuracy of the algorithm  # ~80% ACCURACY
-accuracy = df.loc[df['LLM Equivalence Evaluation (Response)'] != 
-                  'NOT_APPLICABLE', 'llm_matches_human'].mean()
-print(f"Accuracy: {accuracy * 100:.2f}%")
-
-# Median response time captures how most users would experience the tool
-# 8.47s
-median_response_time = df.loc[
-    df['LLM Equivalence Evaluation (Response)'] !='NOT_APPLICABLE', 
-        'Time taken to complete the request'].median()
-print(f"Median response time: {median_response_time:.2f} seconds")
-
-# Average cost per request  # $0.017
-avg_cost = df.loc[df['LLM Equivalence Evaluation (Response)'] !='NOT_APPLICABLE', 
-                  'prompt_tokens'].mean() * 10/10**6 + \
-    df.loc[df['LLM Equivalence Evaluation (Response)'] !='NOT_APPLICABLE', 
-           'completion_tokens'].mean() * 30/10**6
-print(f"Average cost: ${avg_cost:.3f} USD / request")
 
 # TODO: - LOW PRIORITY - Try using the whole history
 # Try using just the last question first, and use history only when there is  
@@ -59,3 +41,9 @@ print(f"Average cost: ${avg_cost:.3f} USD / request")
 
 
 # TODO: - LOW PRIORITY Try adding image link handling to the agent
+
+
+# Saving the results
+df.iloc[:, :10].to_csv('Accuracy Calculation Dataset with LLM Evaluation Results.csv', 
+                       index=False)
+df.to_pickle('Accuracy Calculation Dataset with LLM Evaluation Results.pkl')
