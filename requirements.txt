@@ -1,0 +1,9 @@
+pandas
+ipykernel
+langchain
+langchain_community
+langchain-openai
+python-dotenv
+numexpr
+langchain-experimental
+sympy
