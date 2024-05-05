@@ -15,7 +15,6 @@ agent = get_agent(llm)
 
 df = prepare_data(pd.read_csv("Accuracy Calculation Dataset.csv"))
 
-
 df[['llm_eval_results', 'Time taken to complete the request', 'prompt_tokens', 
     'completion_tokens']] = df.apply(lambda x: evaluate_equivalence(
         agent, x['last_question'], x['User Response']), axis=1, 
