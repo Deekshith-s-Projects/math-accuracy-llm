@@ -12,9 +12,6 @@ def main():
     # GPT-4-turbo shows significant improvement in accuracy over GPT-3.5-turbo.
 
     agent = get_agent(llm)
-
-    x = input()
-    
     df = prepare_data(pd.read_csv("Accuracy Calculation Dataset.csv"))
 
     df[['llm_eval_results', 'Time taken to complete the request', 'prompt_tokens', 
