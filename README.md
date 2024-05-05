@@ -40,3 +40,18 @@ The Agent with the help of the above 3 Tools solves the user's math queries in a
 - "Accuracy Calculation Dataset.csv" - the raw data file with an additional column added for storing any manual corrections. The manual corrections are out of scope for now.
 - "Accuracy Calculation Dataset with LLM Evaluation Results.csv" - created by main.py, based on the above CSV file, to store the analysis results. It has the LLM Evaluation and Time taken columns filled. (I didn't want to mess with the main file in case we redo the analysis)
 - "Accuracy Calculation Dataset with LLM Evaluation Results.pkl" - same as the second CSV file above, but has additional columns including a few complex objects, so didn't store in CSV format.
+
+## Results
+
+Given the constraints in the Data / Problem statement i.e.,
+
+- The last question of the bot and the user response together don't have all the context that is present in all the Conversation History,
+  - GPT-4-turbo estimates its impact to account for 15% loss in the accuracy mentioned below, but this needs to be validated,
+- The Human Evaluation part does seem to have significant number of errors - it is hard to estimate its impact without double-checking by Humans,
+- The context present in the image links in the data isn't used,
+
+the results came out to be
+
+- Accuracy: 65.80%
+- Median response time: 9.18 seconds (Median response time captures how most users would experience the tool)
+- Average cost: $0.018 / request
