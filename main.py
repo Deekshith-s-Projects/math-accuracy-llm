@@ -35,7 +35,7 @@ def main():
     # insufficient context. This saves both time and money. 
     # Also, consider using caching for faster response times overall. 
     # ChatOpenAI() allows you to utilize memory to store previous conversation 
-    # history. This helps 
+    # history. 
 
 
     # TODO: - LOW PRIORITY Try adding image link handling to the agent

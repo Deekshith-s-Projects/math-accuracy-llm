@@ -21,7 +21,7 @@ To set up this project, follow these steps:
 
 ### Approach
 
-We use an LLM agent with 3 Tools for this problem.
+Used an LLM agent with 3 Tools for this problem.
 
 - a Reasoning Tool - addresses logical / reasoning questions / problems in a step-by-step logical way
 - a Calculator - solves numeric computation problems
@@ -55,3 +55,13 @@ the results came out to be
 - Accuracy: 65.80%
 - Median response time: 9.18 seconds (Median response time captures how most users would experience the tool)
 - Average cost: $0.018 / request
+
+## Improving the Accuracy
+
+### Fixing errors
+
+tuple - 8
+lcm - 5
+round - 2
+algebraic expr to LLMMathChain - 9
+unknown format from LLM - word problem format sent to LLMMathChain - 4
