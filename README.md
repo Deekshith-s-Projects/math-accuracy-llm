@@ -60,8 +60,8 @@ the results came out to be
 
 ### Fixing errors
 
-tuple - 8
-lcm - 5
-round - 2
-algebraic expr to LLMMathChain - 9
-unknown format from LLM - word problem format sent to LLMMathChain - 4
+- tuple - 8
+- lcm - 5
+- round - 2
+- algebraic expr to LLMMathChain - 9
+- unknown format from LLM - word problem format sent to LLMMathChain - 4\*
